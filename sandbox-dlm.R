@@ -56,10 +56,12 @@ r_pred<-cbind(byr,r_pred)
 sr_pred<-pivot_longer(data =as.data.frame(r_pred), cols=!byr, names_to="spwn",values_to="rec" )
 sr_pred$spwn<-as.numeric(sr_pred$spwn)
 
+max_spawn <- max(dlm_model$result$spwn)
+max_rec <- max(dlm_model$result$spwn)
 
 a <- ggplot(data=dlm_model$results, aes(x = spwn, y = rec, colour=factor(byr)))+
   geom_point(size = 3,)+
-  coord_cartesian(xlim=c(0, max(spwn)*1.2), ylim=c(0,max(rec)*1.2)) +
+  coord_cartesian(xlim=c(0, max_spawn*1.2), ylim=c(0,max_rec*1.2)) +
   xlab("Spawners") +
   ylab("Recruits") +
   geom_line(data = sr_pred, aes(x = spwn, y = rec, colour=factor(byr)), size = 0.5) +
