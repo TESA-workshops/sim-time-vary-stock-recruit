@@ -57,7 +57,7 @@ fitDLM <- function(data = bt,
   beta<- cbind(beta,outsSmooth$s[-1,2,drop=FALSE])
   lnalpha_se <- sqrt(array(as.numeric(unlist(dlmSvd2var(outsSmooth$U.S, outsSmooth$D.S))), dim=c( 2, 2,length(lnRS)+1)))[1,1,-1]
   beta_se <- sqrt(array(as.numeric(unlist(dlmSvd2var(outsSmooth$U.S, outsSmooth$D.S))), dim=c( 2, 2,length(lnRS)+1)))[2,2,-1]
-  AICc	<- 2*lls + 2*dlmPars +(2*dlmPars*(dlmPars+1)/(length(rec)-dlmPars-1))
+  AICc	<- 2*lls + 2*dlmPars +(2*dlmPars*(dlmPars+1)/(length(data$rec)-dlmPars-1))
   
   # 10. output results
   results <- cbind(data,lnalpha, beta,lnalpha_se,beta_se)
