@@ -48,7 +48,6 @@ for(i in 1:length(byr)){
   r_pred[i,]<-exp(median(dlm_model$results$lnalpha[i]))*spwn_range*exp(dlm_model$results$beta[i]*spwn_range)
 }
 
-
 rownames(r_pred)<-dlm_model$results$byr
 colnames(r_pred)<-spwn_range
 
@@ -127,14 +126,6 @@ c<- ggplot(data=dlm_model$results, aes(x = byr, y = beta)) +
         panel.grid.minor = element_blank(),
         legend.position = "none",
         plot.margin=unit(c(0.25,0.5,0.5,0.5), units="lines"))
-
-
-
-
-
-
-
-
 
 
 g <- ggarrange(a, ggarrange(b,c, nrow =2),
