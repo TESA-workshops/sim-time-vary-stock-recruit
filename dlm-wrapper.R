@@ -116,7 +116,7 @@ plotDLM <- function(dlm_model = dlm_model){
           panel.grid.major = element_blank(),
           panel.grid.minor = element_blank(),
           legend.justification = c(0,0),
-          legend.position = c(0.82,0.865),
+          legend.position = c(0.1,0.765),
           legend.key.size = unit(6, "pt"),
           legend.background = element_blank(),
           legend.text = element_text(size = 6),

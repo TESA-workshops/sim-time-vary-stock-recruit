@@ -1,0 +1,59 @@
+---
+author: "Brendan Connors"
+title: "Example of simulating stock-recruitment data and then fitting a Dynamic Linear Model to it"
+---
+
+# Setup
+
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+source("dlm-wrapper.R")
+```
+
+# Simulate some stock-recruitment data
+
+First we will simulate some stock-recruitment data assuming a Ricker type realtionship with a linear declining trend in productivity and no change in capacity over time:
+
+```{r}
+alpha <- seq(2,0.5,length.out=50) # Ricker a parameter
+beta <- seq(0.01,0.01,length.out=50) # Ricker b parameter
+seq <- alpha/beta # equilibrium population size
+
+spwn <- rep(NA,50)
+rec <- spwn
+spwn[1] <- seq[1]*0.5
+
+for(i in 1:49){
+  rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+  spwn[i+1] <-rec[i]*0.8
+}
+
+rec<-rec[1:49]
+spwn<-spwn[1:49]
+byr<-seq(1:49)
+
+bt<-as.data.frame(cbind(byr,spwn,rec, alpha[-50], beta[-50]))
+colnames(bt)<-c("byr","spwn","rec","alpha_true","beta_true")
+```
+
+Then bind everything together and create a data-frame that will play nice with DLM wrapper functions:
+
+```{r}
+bt<-as.data.frame(cbind(byr,spwn,rec, alpha[-50], beta[-50]))
+colnames(bt)<-c("byr","spwn","rec","alpha_true","beta_true")
+```
+
+
+Next fit a Dynamic Linear Model to simulated data, in this case specifying the intercept (alpha) as time varying:
+
+```{r, warning=FALSE}
+dlm_model <- fitDLM(data = bt,
+              alpha_vary = TRUE,
+              beta_vary = FALSE)
+```
+
+And plot simulated stock-recruitment data and and compare true and estimated parameter estimates:
+
+```{r, fig.width=8, fig.height=4}
+plotDLM(dlm_model)
+```
