@@ -1,4 +1,3 @@
-
 ## load required packages  ----
 library(tidyverse)
 
@@ -35,9 +34,6 @@ dlm_model <- fitDLM(data = bt,
 
 dlm_model
 
-# plot model estimates vs true values ---
+# plot model estimates vs true values ----
 
 plotDLM(dlm_model)
-
-
-
