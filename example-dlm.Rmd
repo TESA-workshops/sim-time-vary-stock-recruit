@@ -43,7 +43,6 @@ bt<-as.data.frame(cbind(byr,spwn,rec, alpha[-50], beta[-50]))
 colnames(bt)<-c("byr","spwn","rec","alpha_true","beta_true")
 ```
 
-
 Next fit a Dynamic Linear Model to simulated data, in this case specifying the intercept (alpha) as time varying:
 
 ```{r, warning=FALSE}
