@@ -35,6 +35,9 @@ for(j in unique(DLMOut$scen)){
     DLMOut[which(DLMOut$scen==j & DLMOut$MC==i),c(8:11)] <- dlm_model$results[,c(12:15)]
   }
 }
+
+head(DLMOut)
+
 ```
 
 Next calculate mean percent bias in alpha and beta: 

@@ -37,8 +37,8 @@ fitDLM <- function(data = bt,
   # 3. specify the model based on variance structure
   build_mod <- function(parm)
   {
-    mod$V <- exp(parm[1])
-    if(alpha_vary==TRUE & beta_vary==FALSE){mod$W[1,1]=exp(parm[2]); mod$W[2,2]=0}
+    mod$V <- exp(parm[1]) # observation error variance
+    if(alpha_vary==TRUE & beta_vary==FALSE){mod$W[1,1]=exp(parm[2]); mod$W[2,2]=0} # evolution (process error) variances
     if(alpha_vary==FALSE & beta_vary==TRUE){mod$W[1,1]=0; mod$W[2,2]=exp(parm[2])}
     if(alpha_vary==TRUE & beta_vary==TRUE){mod$W[1,1]=exp(parm[2]); mod$W[2,2]=exp(parm[3])}
     return(mod)
