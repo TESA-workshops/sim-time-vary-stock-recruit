@@ -1,20 +1,20 @@
 ---
 author: "Brendan Connors"
-title: "Example of simulating stock-recruitment data and then fitting a Dynamic Linear Model to it and summarizing estimation performance"
+title: "Example of simulating stock-recruitment data, fitting a Dynamic Linear Model to it and summarizing estimation performance"
 ---
   
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 source("dlm-wrapper.R")
 ```
-THis is a very quick and dirst example of fitting a DLM to a bunch of simulated data across a range of stock sizes/depletion and then visualizing mean % bias.
+This is a very quick and dirty example of fitting a DLM to a bunch of simulated data across a range of stock sizes/depletion and then visualizing mean % bias followed by an example of creating a confusion matrix that quantifies type 1 and 2 error.
 
 First let's simulate some stock-recruitment data assuming a Ricker type relationship with a linear declining trend in productivity and no change in capacity over time, and lets do it 100 times, for a range of stock sizes (implemented via a range of fixed exploitation rates):
   
 ```{r}
 
 # source a ugly quick and dirty set of sims
-source("ugly-toy-sims.R")
+source("ugly-toy-sims-depletion-scenarios.R")
 
 head(srSimsdfERs)
 ```
@@ -55,10 +55,90 @@ And finally plot:
 ```{r}
 ggplot(data=pms,aes(x=factor(scen), y=mpb, fill=parameter))+
   geom_boxplot(outlier.shape = NA)+
-  xlab("Exploitation rate") +
+  xlab("Stock depletion") +
   ylab("Mean % bias") +
   coord_cartesian(ylim=c(-100,400))+
   scale_fill_viridis_d(labels=c("alpha", "beta"))+
   theme_bw() 
 
+```
+
+Now lets fit 4 different DLMS and figure out the type 1 and 2 errors based on AICc. First run sims:
+
+```{r}
+
+# source a ugly quick and dirty set of sims
+source("ugly-toy-sims-confusion-scenarios.R")
+
+head(srSimsdfConf)
+```
+Next fit four different DLMs to the simulated data so that we can estimate error rates, in this case for a stock depletion of 50% (i.e., fixed 50% harvest rate):  
+```{r, warning=FALSE}
+DLMOut<-srSimsdfConf
+
+confusion<-matrix(0,400,6)
+confusion<-as.data.frame(confusion)
+confusion[,1]<-rep(unique(DLMOut$scen),each=100)
+confusion[,2]<-rep(1:100,times=4)
+colnames(confusion)<-c("scenario","MC","stationary","alpha","beta","alphabeta")
+
+for(j in unique(DLMOut$scen)){
+  for(i in 1:nMC){
+    dlm_model_stat <- fitDLM(data = subset(DLMOut, scen==j & MC==i),
+                        alpha_vary = FALSE,
+                        beta_vary = FALSE)
+    
+    dlm_model_alpha <- fitDLM(data = subset(DLMOut, scen==j & MC==i),
+                        alpha_vary = TRUE,
+                        beta_vary = FALSE)
+    
+    dlm_model_beta <- fitDLM(data = subset(DLMOut, scen==j & MC==i),
+                        alpha_vary = FALSE,
+                        beta_vary = TRUE)
+    
+    dlm_model_both <- fitDLM(data = subset(DLMOut, scen==j & MC==i),
+                        alpha_vary = TRUE,
+                        beta_vary = TRUE)
+    best_mod <- which.min(c(dlm_model_stat$AICc,dlm_model_alpha$AICc,dlm_model_beta$AICc,dlm_model_both$AICc))
+
+    confusion[which(confusion$scen==j & confusion$MC==i),2+best_mod]<-1
+
+      }
+}
+
+```
+
+Then calculate proportion of trials that correctly and incorrectly true underlying dynamics, in this case based on model with lowest AICc:
+
+```{r}
+confusionLong <- confusion %>%
+  group_by(scenario) %>%
+  dplyr::summarize(
+    pStation=sum(stationary)/100,
+    pAlpha=sum(alpha)/100,
+    pBeta=sum(beta)/100,
+    pAlphaBeta=sum(alphabeta)/100) %>%
+  pivot_longer(pStation:pAlphaBeta,names_to="estimated",values_to="pMC") %>%
+  mutate(trueNum=case_when(scenario=="stationary"~1,
+                           scenario=="downAlpha"~2,
+                           scenario=="downBeta"~3,
+                           scenario=="downAlphaBeta"~4)) %>%
+  mutate(estNum=case_when(estimated=="pStation"~1,
+                           estimated=="pAlpha"~2,
+                           estimated=="pBeta"~3,
+                           estimated=="pAlphaBeta"~4))  
+```
+
+And lastly plot confusion matrix:
+
+```{r}
+ggplot(data=confusionLong,aes(x=trueNum, y=estNum, fill=pMC))+
+   geom_tile(aes(fill = pMC))+
+  scale_fill_viridis_c(limits=c(0,1), name="Proportion\n of trials")+
+  xlab("True") +
+  ylab("Estiamted") +
+  geom_text(aes(label = round(pMC, 2)), size = 4, color="white")+
+  scale_x_continuous(labels=c("Stationary", "Alpha vary", "Beta vary", "Both vary"), breaks=c(1,2,3,4))+
+  scale_y_continuous(labels=c("Stationary", "Alpha vary", "Beta vary", "Both vary"), breaks=c(1,2,3,4))+
+  theme_bw() 
 ```

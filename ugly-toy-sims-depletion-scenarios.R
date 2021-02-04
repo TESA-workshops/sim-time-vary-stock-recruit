@@ -1,5 +1,5 @@
 # number of MC trials
-nMC<-500
+nMC<-100
 lengthSr<-50
 
 srSimsAr<-array(NA,dim=c(lengthSr,nMC, 6))
