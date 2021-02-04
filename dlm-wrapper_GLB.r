@@ -64,10 +64,10 @@ fitDLM <- function(data = bt,
   outsSmooth	<-dlmSmooth(outsFilter)
 
   # 9. grab parameters, their SEs and calculate AICc
-  alpha<- cbind(alpha,outsSmooth$s[-1,1,drop=FALSE])
-  beta<- cbind(beta,outsSmooth$s[-1,2,drop=FALSE])
+  alpha <- cbind(alpha,outsSmooth$s[-1,1,drop=FALSE])
+  beta  <- cbind(beta,outsSmooth$s[-1,2,drop=FALSE])
   alpha_se <- sqrt(array(as.numeric(unlist(dlmSvd2var(outsSmooth$U.S, outsSmooth$D.S))), dim=c( 2, 2,length(lnRS)+1)))[1,1,-1]
-  beta_se <- sqrt(array(as.numeric(unlist(dlmSvd2var(outsSmooth$U.S, outsSmooth$D.S))), dim=c( 2, 2,length(lnRS)+1)))[2,2,-1]
+  beta_se  <- sqrt(array(as.numeric(unlist(dlmSvd2var(outsSmooth$U.S, outsSmooth$D.S))), dim=c( 2, 2,length(lnRS)+1)))[2,2,-1]
 
   AICc	<- 2*lls + 2*dlmPars +(2*dlmPars*(dlmPars+1)/(length(data$rec)-dlmPars-1))
   BIC   <- 2*lls + dlmPars*log(length(data$rec))
@@ -82,7 +82,7 @@ fitDLM <- function(data = bt,
 
   # 10. output results
   results <- cbind(data,alpha, beta,alpha_se,beta_se)
-  IC <- data.frame(AICc,BIC,AIC,BICd,AICc_s,BIC_s,AIC_s,BICd_s)
+  IC      <- data.frame(AICc,BIC,AIC,BICd,AICc_s,BIC_s,AIC_s,BICd_s)
   
   #output <- list(results=results,AICc=AICc)
   
