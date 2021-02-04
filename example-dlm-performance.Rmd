@@ -7,7 +7,7 @@ title: "Example of simulating stock-recruitment data and then fitting a Dynamic 
 library(tidyverse)
 source("dlm-wrapper.R")
 ```
-THis is a very quick and dirst example of fitting a DLM to a bunch of simulated data and then visualizing statistical performance. 
+THis is a very quick and dirst example of fitting a DLM to a bunch of simulated data across a range of stock sizes/depletion and then visualizing mean % bias.
 
 First let's simulate some stock-recruitment data assuming a Ricker type relationship with a linear declining trend in productivity and no change in capacity over time, and lets do it 100 times, for a range of stock sizes (implemented via a range of fixed exploitation rates):
   
