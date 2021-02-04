@@ -85,7 +85,7 @@ fitDLM <- function(data = bt,
   IC      <- data.frame(AICc,BIC,AIC,BICd,AICc_s,BIC_s,AIC_s,BICd_s)
   
   #output <- list(results=results,AICc=AICc)
-  
+  output <- list(results=results,IC=IC)
 }
 
 ## plotDLM function
