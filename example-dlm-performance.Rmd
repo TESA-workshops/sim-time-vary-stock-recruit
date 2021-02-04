@@ -1,0 +1,64 @@
+---
+author: "Brendan Connors"
+title: "Example of simulating stock-recruitment data and then fitting a Dynamic Linear Model to it and summarizing estimation performance"
+---
+  
+```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
+source("dlm-wrapper.R")
+```
+THis is a very quick and dirst example of fitting a DLM to a bunch of simulated data and then visualizing statistical performance. 
+
+First let's simulate some stock-recruitment data assuming a Ricker type relationship with a linear declining trend in productivity and no change in capacity over time, and lets do it 100 times, for a range of stock sizes (implemented via a range of fixed exploitation rates):
+  
+```{r}
+
+# source a ugly quick and dirty set of sims
+source("ugly-toy-sims.R")
+
+head(srSimsdfERs)
+```
+
+Then lets fit a DLM, with only time varying alpha, to each Monte Carlo trial in each scenario:
+  
+```{r, warning=FALSE}
+DLMOut<-srSimsdfERs
+DLMOut<-cbind(srSimsdfERs,as.data.frame(matrix(NA,dim(srSimsdfERs)[1],4)))
+  
+colnames(DLMOut)<-c("scen","MC","byr","spwn","rec","alpha_true","beta_true", "alpha", "beta","alpha_se", 'beta_se')
+
+for(j in unique(DLMOut$scen)){
+  for(i in 1:nMC){
+    dlm_model <- fitDLM(data = subset(DLMOut, scen==j & MC==i),
+                        alpha_vary = TRUE,
+                        beta_vary = TRUE)
+    DLMOut[which(DLMOut$scen==j & DLMOut$MC==i),c(8:11)] <- dlm_model$results[,c(12:15)]
+  }
+}
+```
+
+Next calculate mean percent bias in alpha and beta: 
+```{r}
+
+pms <- DLMOut %>%
+  group_by(scen,MC) %>%
+  dplyr::summarize(
+    alpha_mpb=mean((alpha_true-alpha)/alpha_true)*100,
+    beta_mpb=mean((beta_true-beta)/beta_true)*100) %>%
+  pivot_longer(alpha_mpb:beta_mpb,names_to="parameter",values_to="mpb")
+
+
+```
+
+And finally plot:
+
+```{r}
+ggplot(data=pms,aes(x=factor(scen), y=mpb, fill=parameter))+
+  geom_boxplot(outlier.shape = NA)+
+  xlab("Exploitation rate") +
+  ylab("Mean % bias") +
+  coord_cartesian(ylim=c(-100,400))+
+  scale_fill_viridis_d(labels=c("alpha", "beta"))+
+  theme_bw() 
+
+```
