@@ -18,7 +18,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.1
   }
   
@@ -45,7 +45,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.2
   }
   
@@ -73,7 +73,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.3
   }
   
@@ -101,7 +101,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.4
   }
   
@@ -129,7 +129,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.5
   }
   
@@ -157,7 +157,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.6
   }
   
@@ -185,7 +185,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.7
   }
   
@@ -213,7 +213,7 @@ for(j in 1:nMC){
   spwn[1] <- seq[1]*0.5
   
   for(i in 1:lengthSr){
-    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.25))
+    rec[i] <- spwn[i]*exp(alpha[i]-beta[i]*spwn[i])*exp(rnorm(1,0,0.65))
     spwn[i+1] <-rec[i]*0.8
   }
   
